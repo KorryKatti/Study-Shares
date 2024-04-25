@@ -1,0 +1,17 @@
+from flask import Flask, render_template, send_from_directory
+import os
+
+app = Flask(__name__)
+
+# Route for serving index.html
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# Route for serving arcsw.js
+@app.route('/arcsw.js')
+def arcsw():
+    return send_from_directory(os.path.dirname(os.path.realpath(__file__)), 'arcsw.js')
+
+if __name__ == '__main__':
+    app.run(debug=True)
