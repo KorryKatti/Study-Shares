@@ -1,13 +1,96 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Share</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
 </head>
 <body>
-  <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+    <!-- Header -->
+    <header class="text-gray-400 bg-gray-900 body-font">
+        <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+            <a class="flex title-font font-medium items-center text-white mb-4 md:mb-0">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-pink-500 rounded-full" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="ml-3 text-xl">Tailblocks</span>
+            </a>
+            <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
+                <a class="mr-5 hover:text-white">First Link</a>
+                <a class="mr-5 hover:text-white">Second Link</a>
+                <a class="mr-5 hover:text-white">Third Link</a>
+                <a class="mr-5 hover:text-white">Fourth Link</a>
+            </nav>
+            <div class="avatar">
+                <div class="w-8 rounded">
+                    <img id="avatarImg" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" height="10" width="10"/>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Email input section -->
+    <section class="text-gray-400 bg-gray-900 body-font">
+        <div class="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
+            <!-- Form -->
+            <div class="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
+                <!-- Title -->
+                <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-white">Before they sold out
+                    <br class="hidden lg:inline-block">readymade gluten
+                </h1>
+                <!-- Description -->
+                <p class="mb-8 leading-relaxed">Copper mug try-hard pitchfork pour-over freegan heirloom neutra air plant cold-pressed tacos poke beard tote bag. Heirloom echo park mlkshk tote bag selvage hot chicken authentic tumeric truffaut hexagon try-hard chambray.</p>
+                <!-- Email input -->
+                <label class="form-control w-full max-w-xs">
+                    <div class="label">
+                        <span class="label-text">What is your email?</span>
+                    </div>
+                    <input type="text" id="emailInput" placeholder="example@example.com" class="input input-bordered w-full max-w-xs" />
+                </label>
+                <!-- Button to sign in/register -->
+                <a href="login.html" id="signInBtn" class="btn btn-primary mt-4">Sign In/Register</a>
+            </div>
+            <!-- Avatar -->
+            <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
+                <div class="avatar">
+                    <div class="w-20 rounded overflow-hidden">
+                        <img id="avatarImg" class="object-cover object-center w-full h-full" alt="avatar" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Check if email exists in local storage and populate the input
+        var storedEmail = localStorage.getItem('email');
+        if (storedEmail) {
+            document.getElementById('emailInput').value = storedEmail;
+        }
+
+        // Function to update avatar based on Gravatar
+        function updateAvatar() {
+            // Get the email entered by the user
+            var email = document.getElementById('emailInput').value;
+
+            // Store the email in local storage
+            localStorage.setItem('email', email);
+
+            // Validate the email using validator.js
+            if (validator.isEmail(email)) {
+                // If the email is valid, construct the Gravatar URL
+                var gravatarURL = 'https://www.gravatar.com/avatar/' + CryptoJS.MD5(email.trim().toLowerCase()) + '?s=200';
+
+                // Update the avatar image source
+                document.getElementById('avatarImg').src = gravatarURL;
+            } else {
+                // If the email is invalid, show an alert
+                alert('Please enter a valid email address.');
+            }
+        }
+    </script>
 </body>
 </html>
