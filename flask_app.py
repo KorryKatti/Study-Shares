@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from flask_pymongo import PyMongo
 import os
 from dotenv import load_dotenv
@@ -27,8 +27,24 @@ def login():
     return render_template('login.html')
 
 # Route for serving register.html
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
+        # Check if user already exists
+        existing_user = mongo.db.users.find_one({'email': email})
+        if existing_user:
+            return "User already exists. Please log in."
+
+        # Insert user into the database
+        new_user = {'username': username, 'email': email, 'password': password}
+        mongo.db.users.insert_one(new_user)
+
+        return redirect(url_for('login'))
+
     return render_template('register.html')
 
 # Route for serving config.json
