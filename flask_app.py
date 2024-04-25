@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template ,send_from_directory
 
-app = Flask(__name__)
+
+app = Flask(__name__,static_url_path='/static')
 
 # Route for serving index.html
 @app.route('/')
@@ -16,6 +17,10 @@ def login():
 @app.route('/register')
 def register():
     return render_template('register.html')
+
+@app.route('/config.json')
+def get_config():
+    return send_from_directory(app.static_folder, 'config.json')
 
 if __name__ == '__main__':
     app.run(debug=True)

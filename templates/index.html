@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study Share</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.6.0/validator.min.js"></script>
@@ -51,46 +52,47 @@
                     <input type="text" id="emailInput" placeholder="example@example.com" class="input input-bordered w-full max-w-xs" />
                 </label>
                 <!-- Button to sign in/register -->
-                <a href="login.html" id="signInBtn" class="btn btn-primary mt-4">Sign In/Register</a>
+                <a href="login" id="signInBtn" class="btn btn-primary mt-4" onclick="updateAvatar()">Sign In/Register</a>
+
             </div>
-            <!-- Avatar -->
             <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
-                <div class="avatar">
-                    <div class="w-20 rounded overflow-hidden">
-                        <img id="avatarImg" class="object-cover object-center w-full h-full" alt="avatar" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg">
-                    </div>
-                </div>
+              <img class="object-cover object-center rounded" alt="hero" src="https://dummyimage.com/720x600">
             </div>
         </div>
     </section>
 
     <script>
-        // Check if email exists in local storage and populate the input
-        var storedEmail = localStorage.getItem('email');
-        if (storedEmail) {
-            document.getElementById('emailInput').value = storedEmail;
-        }
-
-        // Function to update avatar based on Gravatar
-        function updateAvatar() {
-            // Get the email entered by the user
-            var email = document.getElementById('emailInput').value;
-
-            // Store the email in local storage
-            localStorage.setItem('email', email);
-
-            // Validate the email using validator.js
-            if (validator.isEmail(email)) {
-                // If the email is valid, construct the Gravatar URL
-                var gravatarURL = 'https://www.gravatar.com/avatar/' + CryptoJS.MD5(email.trim().toLowerCase()) + '?s=200';
-
-                // Update the avatar image source
-                document.getElementById('avatarImg').src = gravatarURL;
-            } else {
-                // If the email is invalid, show an alert
-                alert('Please enter a valid email address.');
-            }
-        }
-    </script>
+      // Function to update avatar based on Gravatar or default image
+      function updateAvatar() {
+          // Get the email entered by the user
+          var email = document.getElementById('emailInput').value.trim().toLowerCase();
+  
+          // Check if the email is valid
+          if (!validator.isEmail(email)) {
+              // If the email is not valid, show an alert
+              alert('Please enter a valid email address.');
+              return;
+          }
+  
+          // Construct Gravatar URL
+          var gravatarURL = 'https://www.gravatar.com/avatar/' + CryptoJS.MD5(email) + '?s=200';
+  
+          // Update the avatar image source
+          document.getElementById('avatarImg').src = gravatarURL;
+  
+          // Store the email in local storage
+          localStorage.setItem('email', email);
+      }
+  
+      // Check if email exists in local storage and populate the input
+      var storedEmail = localStorage.getItem('email');
+      if (storedEmail) {
+          document.getElementById('emailInput').value = storedEmail;
+          // If email is stored, update the avatar
+          updateAvatar();
+      }
+  </script>
+  
+  
 </body>
 </html>
