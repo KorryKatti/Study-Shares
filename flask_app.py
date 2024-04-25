@@ -22,5 +22,9 @@ def register():
 def get_config():
     return send_from_directory(app.static_folder, 'config.json')
 
+@app.route('/arc-sw.js')
+def serve_js():
+    return send_file('arc-sw.js')
+
 if __name__ == '__main__':
     app.run(debug=True)
