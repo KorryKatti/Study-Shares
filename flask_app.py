@@ -1,61 +1,63 @@
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
-from flask_pymongo import PyMongo
 import os
+from flask import Flask, render_template
+from pymongo import MongoClient
 from dotenv import load_dotenv
+from urllib.parse import urlparse, parse_qs
 
-app = Flask(__name__, static_url_path='/static')
-
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
-# Configure MongoDB URI from environment variables
-app.config["MONGO_URI"] = os.getenv("MONGODB_URI")
+app = Flask(__name__)
 
-# Initialize PyMongo with the Flask app
-mongo = PyMongo(app)
+# Parse MongoDB URI
+mongo_uri = os.getenv("MONGODB_URI")
+#print("MongoDB URI:", mongo_uri)  # Add this line for debugging
+uri_parts = urlparse(mongo_uri)
+#print("Parsed URI:", uri_parts)   # Add this line for debugging
 
-# Route for serving index.html
+# Extract database name from URI parameters
+query_params = parse_qs(uri_parts.query)
+db_name = query_params.get('appName', [''])[0]
+
+print("Database Name:", db_name)   # Add this line for debugging
+
+client = MongoClient(mongo_uri)
+db = client[db_name]
+
 @app.route('/')
 def index():
-    # Example: Fetch data from MongoDB and pass it to the template
-    data_from_mongodb = mongo.db.collection_name.find()
-    return render_template('index.html', data=data_from_mongodb)
+    return render_template('index.html')
 
-# Route for serving login.html
+from flask import request
+
+@app.route('/register', methods=['POST'])
+def register():
+    print("Request Method:", request.method)
+    print("Request Data:", request.form)
+    if request.method == 'POST':
+        # Get registration data from the form
+        username = request.form['username']
+        password = request.form['password']
+        
+        # Check if the username already exists in the database
+        existing_user = db.users.find_one({'username': username})
+        if existing_user:
+            return 'Username already exists!'
+        
+        # If the username doesn't exist, insert the new user into the database
+        new_user = {'username': username, 'password': password}
+        db.users.insert_one(new_user)
+        
+        return 'Registration successful'  # You can customize the response as needed
+    else:
+        # Handle other methods (GET, etc.) if necessary
+        #return 'Method not allowed'
+        return render_template('register.html')
+
+
 @app.route('/login')
 def login():
     return render_template('login.html')
-
-# Route for serving register.html
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-
-        # Check if user already exists
-        existing_user = mongo.db.users.find_one({'email': email})
-        if existing_user:
-            return "User already exists. Please log in."
-
-        # Insert user into the database
-        new_user = {'username': username, 'email': email, 'password': password}
-        mongo.db.users.insert_one(new_user)
-
-        return redirect(url_for('login'))
-
-    return render_template('register.html')
-
-# Route for serving config.json
-@app.route('/config.json')
-def get_config():
-    return send_from_directory(app.static_folder, 'config.json')
-
-# Route for serving arc-sw.js
-@app.route('/arc-sw.js')
-def serve_js():
-    return send_from_directory(app.static_folder, 'arc-sw.js')
 
 if __name__ == '__main__':
     app.run(debug=True)

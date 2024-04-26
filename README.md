@@ -1,25 +1,13 @@
-# Study Share
+# Template for a basic web app using Python Flask and MongoDB
 
-Welcome to Study Share!
+This is a template for a web app using Flask and MongoDB. It uses Flask-Login for authentication, Flask-Pymongo for the database connection, Flask-Bcrypt for password hashing and Flask-Talisman for security. The front end uses Bootstrap for styling. The app features user verification by email, basic note recording and messaging between users with email notifications.
 
-Study Share is an upcoming platform designed to reward users for their study time. Whether you're a student, professional, or lifelong learner, Study Share incentivizes learning by providing monetary rewards for the time you dedicate to studying.
+## How to use the template
 
-## Features
+Simply insert your MongoDB database URI and database name in the ```configuration.ini``` file. You can also add SMTP server login details to support sending registration emails and message notifications to users.
 
-- **Earn Rewards**: Get paid for the time you spend studying.
-- **Community Sharing**: Share your study sessions with others and motivate each other.
-- **Track Progress**: Monitor your study time and earnings over time.
-- **Customizable Goals**: Set your own study goals and track your progress towards them.
-- **Coming Soon**: Stay tuned as we develop and launch this exciting platform!
+Run the app using the terminal command: ```python run.py```
 
-## Contributing
+## Live demo
 
-We welcome contributions from the community! If you're interested in contributing to Study Share, please check out our [contribution guidelines](CONTRIBUTING.md).
-
-## Feedback
-
-We'd love to hear your feedback and suggestions! Feel free to [contact us](mailto:contact@studysare.com) with any ideas or improvements you'd like to see.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+The app is live for demonstration purposes at [demo.chriswilson.app](https://demo.chriswilson.app).
