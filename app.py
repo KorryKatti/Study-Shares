@@ -10,8 +10,9 @@ app = Flask(__name__)
 MONGO_URI = os.getenv('MONGO_URI')
 client = MongoClient(MONGO_URI)
 
-# Getting the default database from the MongoClient
-db = client.get_default_database()
+# Specify the database name explicitly
+db_name = 'studyshare'
+db = client[db_name]
 
 users_collection = db['users']  # Collection for storing user details
 
@@ -26,7 +27,7 @@ def register():
         password = request.form['password']
         # Insert user details into MongoDB
         users_collection.insert_one({'username': username, 'password': password})
-        return f'Registered new user: {username}'
+        return render_template('login.html')  # Redirect to login page after registration
     else:
         return render_template('register.html')
 
